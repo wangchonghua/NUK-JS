@@ -1,0 +1,2 @@
+# NUK-JS
+class test
