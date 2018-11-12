@@ -4,12 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>晚餐吃啥</title>
+    <title>JS期中考</title>
 </head>
 <body>
-    <h1>吃</h1>
-    <h2>晚餐吃啥拉</h2>
-    <h2>test
-    </h2>
+    <select class="area">
+        <option class="tt"></option>
+      </select>
+      <select class="type">
+        <option>請選擇類型</option>
+      </select>
+      <input class="button" type="button" value="搜尋"></input>
+      <h2 class = "caseNum"></h2>
+      <ul class="tt">
+        <li>
+          <h4 class = "oo"></h4>
+        </li>
+      </ul>
 </body>
+<script>
+    var xhr = new XMLHttpRequest();
+xhr.open('get','https://work1999.kcg.gov.tw/open1999/ServiceRequestsQuery.asmx/ServiceRequestsQuery',true);
+xhr.send();
+//console.log(xhr.responseText);
+xhr.onload = function(){
+  var data = JSON.parse(xhr.responseText);
+  //console.log(data);
+  var area = document.querySelector('.area');
+  var type = document.querySelector('.type');
+  var home = {};
+  var casela = {};
+  for(var x = 0;x < data.length;x++){
+    if(home[[data[x].ZipName_]] == undefined){
+      home[[data[x].ZipName_]]=data[x].ZipName_;
+    }
+    if(casela[[data[x].InformDesc_]] == undefined){
+      casela[[data[x].InformDesc_]]=data[x].InformDesc_;
+    }
+  }
+  var str2 = '';
+  var str3 = '';
+  var tt = document.querySelector('.tt');
+  for(var v in home){
+    str2 += "<option>"+v+"</option>"; 
+    area.innerHTML = str2;
+  }
+  for(var w in casela){
+    str3 += "<option>"+w+"</option>";
+    type.innerHTML = str3;
+  }
+  
+  
+  
+
+  var but = document.querySelector('.button');
+  but.addEventListener('click',function(e){
+    var str = '';
+    var num = 0;
+    if(area.value != "請選擇地區" && type.value != "請選擇類型"){
+      for(var i = 0;i < data.length;i++){
+        if(data[i].ZipName_ == area.value && type.value == data[i].InformDesc_){
+          str += "<li>"+"地點:"+data[i].address_+"<br/>"+"報案狀況:"+data[i].BeforeDesc_+"</li><br/>";
+          num++;
+        }
+      }
+    }
+    if(area.value != "請選擇地區" && type.value == "請選擇類型"){
+      for(var i = 0;i < data.length;i++){
+        if(data[i].ZipName_ == area.value){
+          str += "<li>"+"地點:"+data[i].address_+"<br/>"+"報案狀況:"+data[i].BeforeDesc_+"<li>";
+          num++;
+        }
+      }  
+    }
+    document.querySelector('.caseNum').innerHTML = type.value+"共有"+num+"件";
+    document.querySelector('.oo').innerHTML = str;
+    
+  })
+}
+</script>
 </html>
